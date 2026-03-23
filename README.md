@@ -155,7 +155,7 @@ ClipShelf 是一款**纯本地应用**：
 
 ## 支持
 
-- 📧 邮箱：[support@crossoverjie.com](mailto:support@crossoverjie.com)
+- 📧 邮箱：[crossoverjie@gmail.com](mailto:crossoverjie@gmail.com)
 - 🐛 GitHub Issues：[https://github.com/crossoverJie/ClipShelf/issues](https://github.com/crossoverJie/ClipShelf/issues)
 
 ## 许可

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClipShelf 使用条款</title>
+    <title data-lang="zh">ClipShelf 使用条款</title>
+    <title data-lang="en">ClipShelf Terms of Use</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -17,9 +18,37 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+        .lang-switch button {
+            background: transparent;
+            border: none;
+            color: #333;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 15px;
+            font-size: 14px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .lang-switch button.active {
+            background: #007aff;
+            color: white;
+            opacity: 1;
+        }
+        .lang-switch button:hover {
+            opacity: 1;
+        }
         .header {
             text-align: center;
             margin-bottom: 40px;
+            padding-top: 20px;
         }
         .header h1 {
             font-size: 2.5em;
@@ -57,22 +86,45 @@
         }
         a { color: #007aff; text-decoration: none; }
         a:hover { text-decoration: underline; }
+        [data-lang] {
+            display: none;
+        }
+        [data-lang].active {
+            display: block;
+        }
+        h1[data-lang].active, h2[data-lang].active, h3[data-lang].active {
+            display: block;
+        }
+        .section[data-lang].active {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switch">
+        <button class="active" onclick="setLanguage('zh')">中文</button>
+        <button onclick="setLanguage('en')">English</button>
+    </div>
+
     <div class="container">
         <div class="header">
-            <h1>使用条款</h1>
-            <p class="subtitle">最后更新日期：2026年3月</p>
+            <h1 data-lang="zh">使用条款</h1>
+            <h1 data-lang="en">Terms of Use</h1>
+            <p class="subtitle" data-lang="zh">最后更新日期：2026年3月</p>
+            <p class="subtitle" data-lang="en">Last updated: March 2026</p>
         </div>
-        
+
         <div class="content">
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>1. 服务说明</h2>
                 <p>ClipShelf 是一款 macOS 剪贴板管理工具，提供内容捕获、组织、快速粘贴等功能。基础功能免费使用，高级功能可通过订阅 ClipShelf Pro 解锁。</p>
             </div>
+            <div class="section" data-lang="en">
+                <h2>1. Service Description</h2>
+                <p>ClipShelf is a macOS clipboard management tool that provides content capture, organization, and quick paste features. Basic features are free, while advanced features can be unlocked by subscribing to ClipShelf Pro.</p>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>2. 订阅服务</h2>
                 <p>ClipShelf Pro 提供以下订阅选项：</p>
                 <ul>
@@ -82,8 +134,18 @@
                 </ul>
                 <p>所有订阅均包含 7 天免费试用期。试用期结束后将自动开始计费，除非您在试用期结束前取消。</p>
             </div>
+            <div class="section" data-lang="en">
+                <h2>2. Subscription Services</h2>
+                <p>ClipShelf Pro offers the following subscription options:</p>
+                <ul>
+                    <li><strong>Monthly Subscription:</strong> Auto-renewing, can be cancelled anytime</li>
+                    <li><strong>Annual Subscription:</strong> Auto-renewing, can be cancelled anytime</li>
+                    <li><strong>Lifetime Purchase:</strong> One-time purchase, permanent access</li>
+                </ul>
+                <p>All subscriptions include a 7-day free trial. Billing will automatically begin after the trial ends unless cancelled before.</p>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>3. 取消与退款</h2>
                 <p>订阅管理通过 Apple ID 进行：</p>
                 <ul>
@@ -92,8 +154,17 @@
                     <li>退款请求需通过 Apple 处理</li>
                 </ul>
             </div>
+            <div class="section" data-lang="en">
+                <h2>3. Cancellation & Refunds</h2>
+                <p>Subscription management is handled through your Apple ID:</p>
+                <ul>
+                    <li>Can be cancelled anytime in System Settings → Apple ID → Subscriptions</li>
+                    <li>Pro features remain available until the end of the current billing period</li>
+                    <li>Refund requests must be processed through Apple</li>
+                </ul>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>4. 用户责任</h2>
                 <p>您同意：</p>
                 <ul>
@@ -102,8 +173,17 @@
                     <li>妥善保管您的设备和数据</li>
                 </ul>
             </div>
+            <div class="section" data-lang="en">
+                <h2>4. User Responsibilities</h2>
+                <p>You agree to:</p>
+                <ul>
+                    <li>Not use ClipShelf to store or distribute illegal content</li>
+                    <li>Not attempt to decompile, crack, or modify the application</li>
+                    <li>Properly safeguard your device and data</li>
+                </ul>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>5. 免责声明</h2>
                 <p>ClipShelf 按"现状"提供，不提供任何明示或暗示的担保。我们不对以下情况负责：</p>
                 <ul>
@@ -112,31 +192,85 @@
                     <li>因使用辅助功能权限而产生的任何系统行为</li>
                 </ul>
             </div>
+            <div class="section" data-lang="en">
+                <h2>5. Disclaimer</h2>
+                <p>ClipShelf is provided "as is" without any express or implied warranties. We are not responsible for:</p>
+                <ul>
+                    <li>Data loss or corruption (regular backups of important data are recommended)</li>
+                    <li>Issues caused by system updates or conflicts with other software</li>
+                    <li>Any system behavior resulting from accessibility permissions</li>
+                </ul>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>6. 知识产权</h2>
                 <p>ClipShelf 及其所有相关知识产权归 crossoverJie 所有。未经授权，不得复制、修改、分发应用或其任何部分。</p>
             </div>
+            <div class="section" data-lang="en">
+                <h2>6. Intellectual Property</h2>
+                <p>ClipShelf and all related intellectual property rights belong to crossoverJie. Unauthorized copying, modification, or distribution of the application or any part thereof is prohibited.</p>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>7. 条款变更</h2>
                 <p>我们保留随时修改这些条款的权利。重大变更将通过应用内通知或邮件告知。</p>
             </div>
+            <div class="section" data-lang="en">
+                <h2>7. Changes to Terms</h2>
+                <p>We reserve the right to modify these terms at any time. Significant changes will be communicated through in-app notifications or email.</p>
+            </div>
 
-            <div class="section">
+            <div class="section" data-lang="zh">
                 <h2>8. 联系我们</h2>
                 <p>如有任何问题，请通过以下方式联系：</p>
                 <ul>
-                    <li>📧 邮箱：<a href="mailto:support@crossoverjie.com">support@crossoverjie.com</a></li>
+                    <li>📧 邮箱：<a href="mailto:crossoverjie@gmail.com">crossoverjie@gmail.com</a></li>
                     <li>🐛 GitHub Issues：<a href="https://github.com/crossoverJie/ClipShelf/issues">https://github.com/crossoverJie/ClipShelf/issues</a></li>
+                </ul>
+            </div>
+            <div class="section" data-lang="en">
+                <h2>8. Contact Us</h2>
+                <p>For any questions, please contact us:</p>
+                <ul>
+                    <li>📧 Email: <a href="mailto:crossoverjie@gmail.com">crossoverjie@gmail.com</a></li>
+                    <li>🐛 GitHub Issues: <a href="https://github.com/crossoverJie/ClipShelf/issues">https://github.com/crossoverJie/ClipShelf/issues</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer">
             <p>© 2026 crossoverJie. All rights reserved.</p>
-            <p><a href="index.html">返回首页</a> | <a href="privacy.html">隐私政策</a></p>
+            <p><a href="index.html" data-lang="zh">返回首页</a><a href="index.html" data-lang="en">Back to Home</a> | <a href="privacy.html" data-lang="zh">隐私政策</a><a href="privacy.html" data-lang="en">Privacy Policy</a></p>
         </div>
     </div>
+
+    <script>
+        function setLanguage(lang) {
+            document.querySelectorAll('.lang-switch button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                el.classList.remove('active');
+                if (el.getAttribute('data-lang') === lang) {
+                    el.classList.add('active');
+                }
+            });
+
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+            const title = document.querySelector('title[data-lang="' + lang + '"]');
+            if (title) {
+                document.title = title.textContent;
+            }
+        }
+
+        // Initialize
+        document.querySelectorAll('[data-lang="zh"]').forEach(el => {
+            el.classList.add('active');
+        });
+        document.title = "ClipShelf 使用条款";
+    </script>
 </body>
 </html>

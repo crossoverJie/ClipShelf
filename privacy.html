@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClipShelf 隐私政策</title>
+    <title data-lang="zh">ClipShelf 隐私政策</title>
+    <title data-lang="en">ClipShelf Privacy Policy</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -17,9 +18,37 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+        .lang-switch button {
+            background: transparent;
+            border: none;
+            color: #333;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 15px;
+            font-size: 14px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .lang-switch button.active {
+            background: #007aff;
+            color: white;
+            opacity: 1;
+        }
+        .lang-switch button:hover {
+            opacity: 1;
+        }
         .header {
             text-align: center;
             margin-bottom: 40px;
+            padding-top: 20px;
         }
         .header h1 {
             font-size: 2.5em;
@@ -66,76 +95,158 @@
         }
         a { color: #007aff; text-decoration: none; }
         a:hover { text-decoration: underline; }
+        [data-lang] {
+            display: none;
+        }
+        [data-lang].active {
+            display: block;
+        }
+        h1[data-lang].active, h2[data-lang].active, h3[data-lang].active {
+            display: block;
+        }
+        title[data-lang].active {
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switch">
+        <button class="active" onclick="setLanguage('zh')">中文</button>
+        <button onclick="setLanguage('en')">English</button>
+    </div>
+
     <div class="container">
         <div class="header">
-            <h1>隐私政策</h1>
-            <p class="subtitle">最后更新日期：2026年3月</p>
+            <h1 data-lang="zh">隐私政策</h1>
+            <h1 data-lang="en">Privacy Policy</h1>
+            <p class="subtitle" data-lang="zh">最后更新日期：2026年3月</p>
+            <p class="subtitle" data-lang="en">Last updated: March 2026</p>
         </div>
-        
+
         <div class="content">
-            <div class="highlight">
+            <div class="highlight" data-lang="zh">
                 <strong>重要声明：</strong>ClipShelf 是一款纯本地应用，不收集、不上传、不共享您的任何数据。
             </div>
+            <div class="highlight" data-lang="en">
+                <strong>Important:</strong> ClipShelf is a purely local application. We do not collect, upload, or share any of your data.
+            </div>
 
-            <h2>数据收集</h2>
-            <p><strong>我们不收集任何用户数据。</strong></p>
-            <p>您复制到 ClipShelf 的所有内容（文本、图片、文件）均存储在您的本地设备上。我们：</p>
+            <h2 data-lang="zh">数据收集</h2>
+            <h2 data-lang="en">Data Collection</h2>
+            <p data-lang="zh"><strong>我们不收集任何用户数据。</strong></p>
+            <p data-lang="en"><strong>We do not collect any user data.</strong></p>
+            <p data-lang="zh">您复制到 ClipShelf 的所有内容（文本、图片、文件）均存储在您的本地设备上。我们：</p>
+            <p data-lang="en">All content you copy to ClipShelf (text, images, files) is stored locally on your device. We:</p>
             <ul>
-                <li>❌ 不将数据上传到任何服务器</li>
-                <li>❌ 不与第三方共享您的数据</li>
-                <li>❌ 不使用任何分析工具追踪您的使用</li>
-                <li>❌ 不显示任何广告</li>
+                <li data-lang="zh">❌ 不将数据上传到任何服务器</li>
+                <li data-lang="en">❌ Do not upload data to any server</li>
+                <li data-lang="zh">❌ 不与第三方共享您的数据</li>
+                <li data-lang="en">❌ Do not share your data with third parties</li>
+                <li data-lang="zh">❌ 不使用任何分析工具追踪您的使用</li>
+                <li data-lang="en">❌ Do not use any analytics tools to track your usage</li>
+                <li data-lang="zh">❌ 不显示任何广告</li>
+                <li data-lang="en">❌ Do not display any advertisements</li>
             </ul>
 
-            <h2>数据存储</h2>
-            <p>您的数据存储在以下位置：</p>
+            <h2 data-lang="zh">数据存储</h2>
+            <h2 data-lang="en">Data Storage</h2>
+            <p data-lang="zh">您的数据存储在以下位置：</p>
+            <p data-lang="en">Your data is stored in the following locations:</p>
             <ul>
-                <li><strong>存储路径：</strong>~/Library/Application Support/com.crossoverjie.ClipShelf/</li>
-                <li><strong>存储技术：</strong>SwiftData 本地数据库</li>
-                <li><strong>图片存储：</strong>本地文件系统（外部存储）</li>
+                <li data-lang="zh"><strong>存储路径：</strong>~/Library/Application Support/com.crossoverjie.ClipShelf/</li>
+                <li data-lang="en"><strong>Storage Path:</strong> ~/Library/Application Support/com.crossoverjie.ClipShelf/</li>
+                <li data-lang="zh"><strong>存储技术：</strong>SwiftData 本地数据库</li>
+                <li data-lang="en"><strong>Storage Technology:</strong> SwiftData local database</li>
+                <li data-lang="zh"><strong>图片存储：</strong>本地文件系统（外部存储）</li>
+                <li data-lang="en"><strong>Image Storage:</strong> Local file system (external storage)</li>
             </ul>
-            <p>您可以随时在应用内删除所有数据，或通过删除应用彻底清除数据。</p>
+            <p data-lang="zh">您可以随时在应用内删除所有数据，或通过删除应用彻底清除数据。</p>
+            <p data-lang="en">You can delete all data within the app at any time, or completely remove it by deleting the app.</p>
 
-            <h2>系统权限</h2>
-            <p>ClipShelf 请求以下 macOS 系统权限：</p>
+            <h2 data-lang="zh">系统权限</h2>
+            <h2 data-lang="en">System Permissions</h2>
+            <p data-lang="zh">ClipShelf 请求以下 macOS 系统权限：</p>
+            <p data-lang="en">ClipShelf requests the following macOS system permissions:</p>
             <ul>
-                <li><strong>辅助功能权限（Accessibility）：</strong>仅用于"快速粘贴"功能，模拟 ⌘V 按键将内容粘贴到目标应用</li>
-                <li><strong>文件访问权限：</strong>仅用于拖放文件功能，访问您手动选择的文件</li>
-                <li><strong>启动登录权限：</strong>仅用于"开机自动启动"功能</li>
+                <li data-lang="zh"><strong>辅助功能权限（Accessibility）：</strong>仅用于"快速粘贴"功能，模拟 ⌘V 按键将内容粘贴到目标应用</li>
+                <li data-lang="en"><strong>Accessibility Permission:</strong> Only used for the "Quick Paste" feature to simulate ⌘V keystrokes</li>
+                <li data-lang="zh"><strong>文件访问权限：</strong>仅用于拖放文件功能，访问您手动选择的文件</li>
+                <li data-lang="en"><strong>File Access Permission:</strong> Only used for drag-and-drop file functionality</li>
+                <li data-lang="zh"><strong>启动登录权限：</strong>仅用于"开机自动启动"功能</li>
+                <li data-lang="en"><strong>Login Items Permission:</strong> Only used for "Launch at Login" feature</li>
             </ul>
 
-            <h2>订阅与支付</h2>
-            <p>应用内购买（ClipShelf Pro）通过 Apple StoreKit 处理：</p>
+            <h2 data-lang="zh">订阅与支付</h2>
+            <h2 data-lang="en">Subscriptions & Payments</h2>
+            <p data-lang="zh">应用内购买（ClipShelf Pro）通过 Apple StoreKit 处理：</p>
+            <p data-lang="en">In-app purchases (ClipShelf Pro) are processed through Apple StoreKit:</p>
             <ul>
-                <li>支付信息由 Apple 处理</li>
-                <li>我们无法访问您的支付详情</li>
-                <li>订阅管理通过您的 Apple ID 完成</li>
+                <li data-lang="zh">支付信息由 Apple 处理</li>
+                <li data-lang="en">Payment information is processed by Apple</li>
+                <li data-lang="zh">我们无法访问您的支付详情</li>
+                <li data-lang="en">We cannot access your payment details</li>
+                <li data-lang="zh">订阅管理通过您的 Apple ID 完成</li>
+                <li data-lang="en">Subscription management is handled through your Apple ID</li>
             </ul>
 
-            <h2>第三方服务</h2>
-            <p>ClipShelf <strong>不使用</strong>任何第三方分析工具、广告网络或 SDK。</p>
-            <p>零外部依赖，完全本地运行。</p>
+            <h2 data-lang="zh">第三方服务</h2>
+            <h2 data-lang="en">Third-Party Services</h2>
+            <p data-lang="zh">ClipShelf <strong>不使用</strong>任何第三方分析工具、广告网络或 SDK。</p>
+            <p data-lang="en">ClipShelf <strong>does NOT use</strong> any third-party analytics tools, advertising networks, or SDKs.</p>
+            <p data-lang="zh">零外部依赖，完全本地运行。</p>
+            <p data-lang="en">Zero external dependencies, fully local operation.</p>
 
-            <h2>儿童隐私</h2>
-            <p>ClipShelf 不包含任何不适合儿童的内容，也不收集任何用户数据。</p>
+            <h2 data-lang="zh">儿童隐私</h2>
+            <h2 data-lang="en">Children's Privacy</h2>
+            <p data-lang="zh">ClipShelf 不包含任何不适合儿童的内容，也不收集任何用户数据。</p>
+            <p data-lang="en">ClipShelf does not contain any content unsuitable for children and does not collect any user data.</p>
 
             <div class="contact">
-                <h2>联系我们</h2>
-                <p>如有隐私相关问题，请通过以下方式联系：</p>
+                <h2 data-lang="zh">联系我们</h2>
+                <h2 data-lang="en">Contact Us</h2>
+                <p data-lang="zh">如有隐私相关问题，请通过以下方式联系：</p>
+                <p data-lang="en">For privacy-related questions, please contact us:</p>
                 <ul>
-                    <li>📧 邮箱：<a href="mailto:support@crossoverjie.com">support@crossoverjie.com</a></li>
-                    <li>🐛 GitHub Issues：<a href="https://github.com/crossoverJie/ClipShelf/issues">https://github.com/crossoverJie/ClipShelf/issues</a></li>
+                    <li>📧 Email: <a href="mailto:crossoverjie@gmail.com">crossoverjie@gmail.com</a></li>
+                    <li>🐛 GitHub Issues: <a href="https://github.com/crossoverJie/ClipShelf/issues">https://github.com/crossoverJie/ClipShelf/issues</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer">
             <p>© 2026 crossoverJie. All rights reserved.</p>
-            <p><a href="index.html">返回首页</a></p>
+            <p><a href="index.html" data-lang="zh">返回首页</a><a href="index.html" data-lang="en">Back to Home</a></p>
         </div>
     </div>
+
+    <script>
+        function setLanguage(lang) {
+            document.querySelectorAll('.lang-switch button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                el.classList.remove('active');
+                if (el.getAttribute('data-lang') === lang) {
+                    el.classList.add('active');
+                }
+            });
+
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+            // Update page title
+            const title = document.querySelector('title[data-lang="' + lang + '"]');
+            if (title) {
+                document.title = title.textContent;
+            }
+        }
+
+        // Initialize
+        document.querySelectorAll('[data-lang="zh"]').forEach(el => {
+            el.classList.add('active');
+        });
+        document.title = "ClipShelf 隐私政策";
+    </script>
 </body>
 </html>

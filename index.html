@@ -18,6 +18,34 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+        .lang-switch button {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 15px;
+            font-size: 14px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .lang-switch button.active {
+            background: white;
+            color: #667eea;
+            opacity: 1;
+        }
+        .lang-switch button:hover {
+            opacity: 1;
+        }
         .hero {
             text-align: center;
             color: white;
@@ -120,78 +148,149 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        [data-lang] {
+            display: none;
+        }
+        [data-lang].active {
+            display: block;
+        }
+        h2[data-lang].active, h3[data-lang].active {
+            display: block;
+        }
+        .feature-item h3[data-lang].active {
+            display: block;
+        }
+        .feature-item p[data-lang].active {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switch">
+        <button class="active" onclick="setLanguage('zh')">中文</button>
+        <button onclick="setLanguage('en')">English</button>
+    </div>
+
     <div class="container">
         <div class="hero">
             <h1>ClipShelf</h1>
-            <p class="tagline">你的临时内容货架 · 智能剪贴板管理工具</p>
-            <p>自动捕获、智能分词、快速预览、一键粘贴</p>
+            <p class="tagline" data-lang="zh">你的临时内容货架 · 智能剪贴板管理工具</p>
+            <p class="tagline" data-lang="en">Your Temporary Content Shelf · Smart Clipboard Manager</p>
+            <p data-lang="zh">自动捕获、智能分词、快速预览、一键粘贴</p>
+            <p data-lang="en">Auto-capture, Smart Tokenization, Quick Preview, One-click Paste</p>
             <div class="cta-buttons">
-                <a href="#download" class="cta-button">App Store 下载</a>
+                <a href="#download" class="cta-button" data-lang="zh">App Store 下载</a>
+                <a href="#download" class="cta-button" data-lang="en">Download on App Store</a>
                 <a href="https://github.com/crossoverJie/ClipShelf" class="cta-button secondary">GitHub</a>
             </div>
         </div>
 
         <div class="features">
-            <h2>核心功能</h2>
+            <h2 data-lang="zh">核心功能</h2>
+            <h2 data-lang="en">Core Features</h2>
             <div class="feature-grid">
                 <div class="feature-item">
                     <div class="feature-icon">📋</div>
-                    <h3>自动捕获</h3>
-                    <p>自动捕获剪贴板内容，支持文本、图片、文件</p>
+                    <h3 data-lang="zh">自动捕获</h3>
+                    <h3 data-lang="en">Auto Capture</h3>
+                    <p data-lang="zh">自动捕获剪贴板内容，支持文本、图片、文件</p>
+                    <p data-lang="en">Automatically capture clipboard content: text, images, files</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">⚡</div>
-                    <h3>快速粘贴</h3>
-                    <p>双击卡片即刻粘贴，支持 ⌘1-9 快捷键</p>
+                    <h3 data-lang="zh">快速粘贴</h3>
+                    <h3 data-lang="en">Quick Paste</h3>
+                    <p data-lang="zh">双击卡片即刻粘贴，支持 ⌘1-9 快捷键</p>
+                    <p data-lang="en">Double-click to paste instantly, with ⌘1-9 shortcuts</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🔍</div>
-                    <h3>智能搜索</h3>
-                    <p>强大的搜索和筛选，彩色标签管理</p>
+                    <h3 data-lang="zh">智能搜索</h3>
+                    <h3 data-lang="en">Smart Search</h3>
+                    <p data-lang="zh">强大的搜索和筛选，彩色标签管理</p>
+                    <p data-lang="en">Powerful search & filtering with colorful tag management</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📝</div>
-                    <h3>智能分词</h3>
-                    <p>中文智能分词，精准选择需要的词汇</p>
+                    <h3 data-lang="zh">智能分词</h3>
+                    <h3 data-lang="en">Smart Tokenization</h3>
+                    <p data-lang="zh">中文智能分词，精准选择需要的词汇</p>
+                    <p data-lang="en">Chinese word segmentation for precise text selection</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🔄</div>
-                    <h3>拖放支持</h3>
-                    <p>无缝拖放，与 Finder 和其他应用完美协作</p>
+                    <h3 data-lang="zh">拖放支持</h3>
+                    <h3 data-lang="en">Drag & Drop</h3>
+                    <p data-lang="zh">无缝拖放，与 Finder 和其他应用完美协作</p>
+                    <p data-lang="en">Seamless drag & drop with Finder and other apps</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🔒</div>
-                    <h3>隐私优先</h3>
-                    <p>纯本地存储，零外部依赖，不上传任何数据</p>
+                    <h3 data-lang="zh">隐私优先</h3>
+                    <h3 data-lang="en">Privacy First</h3>
+                    <p data-lang="zh">纯本地存储，零外部依赖，不上传任何数据</p>
+                    <p data-lang="en">Pure local storage, zero external dependencies, no data upload</p>
                 </div>
             </div>
         </div>
 
         <div class="info-section">
-            <h3>系统要求</h3>
+            <h3 data-lang="zh">系统要求</h3>
+            <h3 data-lang="en">System Requirements</h3>
             <ul>
-                <li>macOS 14.0 或更高版本</li>
-                <li>Apple Silicon 或 Intel 处理器</li>
-                <li>需要辅助功能权限用于快速粘贴功能</li>
+                <li data-lang="zh">macOS 14.0 或更高版本</li>
+                <li data-lang="en">macOS 14.0 or later</li>
+                <li data-lang="zh">Apple Silicon 或 Intel 处理器</li>
+                <li data-lang="en">Apple Silicon or Intel processor</li>
+                <li data-lang="zh">需要辅助功能权限用于快速粘贴功能</li>
+                <li data-lang="en">Accessibility permission required for quick paste feature</li>
             </ul>
         </div>
 
         <div class="info-section">
-            <h3>免费试用</h3>
-            <p>ClipShelf Pro 提供 7 天免费试用，解锁无限条目、文件支持、自定义快捷键等高级功能。</p>
+            <h3 data-lang="zh">免费试用</h3>
+            <h3 data-lang="en">Free Trial</h3>
+            <p data-lang="zh">ClipShelf Pro 提供 7 天免费试用，解锁无限条目、文件支持、自定义快捷键等高级功能。</p>
+            <p data-lang="en">ClipShelf Pro offers a 7-day free trial with unlimited items, file support, custom shortcuts and more.</p>
         </div>
     </div>
 
     <div class="footer">
         <p>
-            <a href="privacy.html">隐私政策</a>
-            <a href="terms.html">使用条款</a>
-            <a href="https://github.com/crossoverJie/ClipShelf/issues">支持</a>
+            <a href="privacy.html" data-lang="zh">隐私政策</a>
+            <a href="privacy.html" data-lang="en">Privacy Policy</a>
+            <a href="terms.html" data-lang="zh">使用条款</a>
+            <a href="terms.html" data-lang="en">Terms of Use</a>
+            <a href="https://github.com/crossoverJie/ClipShelf/issues" data-lang="zh">支持</a>
+            <a href="https://github.com/crossoverJie/ClipShelf/issues" data-lang="en">Support</a>
         </p>
         <p style="margin-top: 20px;">© 2026 crossoverJie. All rights reserved.</p>
     </div>
+
+    <script>
+        function setLanguage(lang) {
+            // Update buttons
+            document.querySelectorAll('.lang-switch button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                el.classList.remove('active');
+                if (el.getAttribute('data-lang') === lang) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Update html lang attribute
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        }
+
+        // Initialize: show Chinese by default
+        document.querySelectorAll('[data-lang="zh"]').forEach(el => {
+            el.classList.add('active');
+        });
+    </script>
 </body>
 </html>

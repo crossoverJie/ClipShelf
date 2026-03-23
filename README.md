@@ -66,20 +66,6 @@ ClipShelf 是一款为 macOS 设计的精美剪贴板管理工具，帮助您高
   <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" width="120" alt="Download on the App Store">
 </a>
 
-### 手动构建
-
-```bash
-# 克隆仓库
-git clone https://github.com/crossoverJie/ClipShelf.git
-cd ClipShelf
-
-# 生成 Xcode 项目
-xcodegen generate
-
-# 在 Xcode 中打开并构建
-open ClipShelf.xcodeproj
-```
-
 ## 订阅
 
 ClipShelf 基础功能免费使用，Pro 版本提供高级功能：
@@ -107,40 +93,6 @@ ClipShelf 需要以下系统权限：
 - **辅助功能权限**：用于"快速粘贴"功能，模拟 ⌘V 按键
 - **文件访问权限**：用于拖放文件功能
 - **启动登录权限**：用于"开机自动启动"功能
-
-## 开发
-
-### 技术栈
-
-- Swift 6.0
-- SwiftUI
-- SwiftData
-- StoreKit（应用内购买）
-
-### 项目结构
-
-```
-Shelf/
-├── Models/          # 数据模型
-├── Views/           # SwiftUI 视图
-├── ViewModels/      # 视图模型
-├── Services/        # 服务层
-├── Utilities/       # 工具类
-└── Resources/       # 资源文件
-```
-
-### 构建
-
-```bash
-# 生成 Xcode 项目
-xcodegen generate
-
-# 构建
-xcodebuild build -project ClipShelf.xcodeproj -scheme Shelf
-
-# 运行测试
-xcodebuild test -project ClipShelf.xcodeproj -scheme ShelfTests
-```
 
 ## 隐私
 

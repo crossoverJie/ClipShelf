@@ -4,7 +4,12 @@
       "Bash(git remote:*)",
       "Bash(git push:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__superdesign__superdesign_live_gallery",
+      "Bash(git config:*)",
+      "Read(//Users/chenjie/.git-templates/**)",
+      "Read(//Users/chenjie/.config/git/**)",
+      "Bash(find /Users/chenjie/Documents/dev/github/ClipShelf -type f -name *.swift)"
     ]
   }
 }

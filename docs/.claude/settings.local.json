@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/chenjie/.claude/skills -name *.md -type f)",
+      "WebSearch",
+      "WebFetch(domain:support.apple.com)",
+      "Bash(curl -s \"https://support.apple.com/en-us/102650\")",
+      "Bash(plutil -p ~/Library/Preferences/com.logitech.manager.setting.0006b023.plist)",
+      "WebFetch(domain:docs.warp.dev)",
+      "Bash(curl -s \"https://docs.warp.dev/\")",
+      "Bash(curl -s https://r.jina.ai/docs.warp.dev/getting-started/keyboard-shortcuts)"
+    ]
+  }
+}

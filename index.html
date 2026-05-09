@@ -3,297 +3,1040 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClipShelf - 你的临时内容货架</title>
+    <title>ClipShelf - 智能暂存架与屏幕文字识别</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            --grad-start: #0f0c29;
+            --grad-mid: #302b63;
+            --grad-end: #24243e;
+            --accent-purple: #a78bfa;
+            --accent-blue: #60a5fa;
+            --accent-cyan: #22d3ee;
+            --accent-pink: #f472b6;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
+
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
         }
-        .lang-switch {
+
+        .blob {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 5px 10px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+            animation: float 20s ease-in-out infinite;
         }
-        .lang-switch button {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 5px 12px;
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-purple);
+            top: -200px;
+            right: -100px;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-blue);
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 450px;
+            height: 450px;
+            background: var(--accent-pink);
+            top: 40%;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .blob-4 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-cyan);
+            bottom: 20%;
+            right: 10%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 6px 12px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 15px;
-            font-size: 14px;
-            opacity: 0.7;
-            transition: all 0.3s;
-        }
-        .lang-switch button.active {
-            background: white;
-            color: #667eea;
-            opacity: 1;
-        }
-        .lang-switch button:hover {
-            opacity: 1;
-        }
-        .hero {
-            text-align: center;
-            color: white;
-            padding: 60px 0;
-        }
-        .hero h1 {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        .hero .tagline {
-            font-size: 1.3em;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-        .cta-buttons {
-            margin-top: 30px;
-        }
-        .cta-button {
-            display: inline-block;
-            background: white;
-            color: #667eea;
-            padding: 15px 40px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 0 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .cta-button.secondary {
+            transition: all 0.3s ease;
+            border: none;
             background: transparent;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
             color: white;
-            border: 2px solid white;
         }
-        .features {
-            background: white;
+
+        .lang-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 16px 40px;
+            background: rgba(15, 12, 41, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            margin-left: auto;
+            margin-right: 16px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 40px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent-purple);
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(167, 139, 250, 0); }
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title .gradient {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-purple) 50%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
             border-radius: 16px;
-            padding: 60px 40px;
-            margin-top: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
         }
-        .features h2 {
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(167, 139, 250, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-screenshot {
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .screenshot-frame {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .screenshot-frame img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .features {
+            padding: 120px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
             text-align: center;
-            font-size: 2em;
-            margin-bottom: 40px;
-            color: #1a1a1a;
+            margin-bottom: 80px;
         }
-        .feature-grid {
+
+        .section-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
-        .feature-item {
-            text-align: center;
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.3), rgba(96, 165, 250, 0.3));
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.3), rgba(167, 139, 250, 0.3));
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(96, 165, 250, 0.3));
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.3), rgba(244, 114, 182, 0.3));
+        }
+
+        .feature-card:nth-child(5) .feature-icon {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.3), rgba(34, 211, 238, 0.3));
+        }
+
+        .feature-card:nth-child(6) .feature-icon {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(167, 139, 250, 0.3));
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .screenshots {
+            padding: 120px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screenshots-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .screenshot-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 48px;
+            align-items: center;
+            transition: all 0.4s ease;
+        }
+
+        .screenshot-item:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.4);
+        }
+
+        .screenshot-item.reverse {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .screenshot-item.reverse .screenshot-text {
+            order: 2;
+        }
+
+        .screenshot-item.reverse .screenshot-image {
+            order: 1;
+        }
+
+        .screenshot-text {
             padding: 20px;
         }
-        .feature-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-        .feature-item h3 {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            color: #1a1a1a;
-        }
-        .feature-item p {
-            color: #666;
-        }
-        .info-section {
-            background: rgba(255,255,255,0.95);
-            border-radius: 16px;
-            padding: 40px;
-            margin-top: 30px;
-        }
-        .info-section h3 {
-            color: #1a1a1a;
+
+        .screenshot-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
             margin-bottom: 20px;
         }
-        .info-section ul {
-            padding-left: 20px;
+
+        .screenshot-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
         }
-        .info-section li {
-            margin-bottom: 10px;
+
+        .screenshot-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.7;
         }
-        .footer {
+
+        .screenshot-image {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot-image img {
+            width: 100%;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .screenshot-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .download {
+            padding: 120px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 64px;
             text-align: center;
-            color: white;
-            padding: 40px 0;
-            opacity: 0.8;
+            position: relative;
+            overflow: hidden;
         }
-        .footer a {
-            color: white;
-            margin: 0 15px;
+
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .download-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 0 auto 32px;
+            box-shadow: 0 20px 50px rgba(167, 139, 250, 0.4);
+        }
+
+        .download-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .download-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .download-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .app-store-btn {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .app-store-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .app-store-btn img {
+            height: 50px;
+        }
+
+        .download-meta {
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer {
+            padding: 60px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
             text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
         }
-        .footer a:hover {
-            text-decoration: underline;
+
+        .footer-links a:hover {
+            color: var(--text-primary);
         }
-        [data-lang] {
-            display: none;
+
+        .footer-copy {
+            font-size: 13px;
+            color: var(--text-muted);
         }
-        [data-lang].active {
-            display: block;
+
+        @media (max-width: 968px) {
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshot-item,
+            .screenshot-item.reverse {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshot-item.reverse .screenshot-text,
+            .screenshot-item.reverse .screenshot-image {
+                order: unset;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .lang-switcher {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                right: auto;
+                top: auto;
+                z-index: 1001;
+            }
+
+            .download-card {
+                padding: 40px 24px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
         }
-        h2[data-lang].active, h3[data-lang].active {
-            display: block;
+
+        ::-webkit-scrollbar {
+            width: 10px;
         }
-        .feature-item h3[data-lang].active {
-            display: block;
+
+        ::-webkit-scrollbar-track {
+            background: var(--grad-start);
         }
-        .feature-item p[data-lang].active {
-            display: block;
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.5);
         }
     </style>
 </head>
 <body>
-    <div class="lang-switch">
-        <button class="active" onclick="setLanguage('zh')">中文</button>
-        <button onclick="setLanguage('en')">English</button>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
     </div>
 
-    <div class="container">
-        <div class="hero">
-            <h1>ClipShelf</h1>
-            <p class="tagline" data-lang="zh">你的临时内容货架 · 智能剪贴板管理工具</p>
-            <p class="tagline" data-lang="en">Your Temporary Content Shelf · Smart Clipboard Manager</p>
-            <p data-lang="zh">自动捕获、智能分词、快速预览、一键粘贴</p>
-            <p data-lang="en">Auto-capture, Smart Tokenization, Quick Preview, One-click Paste</p>
-            <div class="cta-buttons">
-                <a href="#download" class="cta-button" data-lang="zh">App Store 下载</a>
-                <a href="#download" class="cta-button" data-lang="en">Download on App Store</a>
-                <a href="https://github.com/crossoverJie/ClipShelf" class="cta-button secondary">GitHub</a>
-            </div>
+    <nav class="navbar" id="navbar">
+        <div class="nav-logo">
+            <div class="logo-icon"><img src="image/logo.png" alt="ClipShelf"></div>
+            <span>ClipShelf</span>
         </div>
+        <ul class="nav-links">
+            <li><a href="#features" data-i18n="nav.features">功能特性</a></li>
+            <li><a href="#screenshots" data-i18n="nav.screenshots">应用截图</a></li>
+            <li><a href="#download" data-i18n="nav.download">下载</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn active" data-lang="zh">中文</button>
+            <button class="lang-btn" data-lang="en">English</button>
+        </div>
+    </nav>
 
-        <div class="features">
-            <h2 data-lang="zh">核心功能</h2>
-            <h2 data-lang="en">Core Features</h2>
-            <div class="feature-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">📋</div>
-                    <h3 data-lang="zh">自动捕获</h3>
-                    <h3 data-lang="en">Auto Capture</h3>
-                    <p data-lang="zh">自动捕获剪贴板内容，支持文本、图片、文件</p>
-                    <p data-lang="en">Automatically capture clipboard content: text, images, files</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <h3 data-lang="zh">快速粘贴</h3>
-                    <h3 data-lang="en">Quick Paste</h3>
-                    <p data-lang="zh">双击卡片即刻粘贴，支持 ⌘1-9 快捷键</p>
-                    <p data-lang="en">Double-click to paste instantly, with ⌘1-9 shortcuts</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔍</div>
-                    <h3 data-lang="zh">智能搜索</h3>
-                    <h3 data-lang="en">Smart Search</h3>
-                    <p data-lang="zh">强大的搜索和筛选，彩色标签管理</p>
-                    <p data-lang="en">Powerful search & filtering with colorful tag management</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📝</div>
-                    <h3 data-lang="zh">智能分词</h3>
-                    <h3 data-lang="en">Smart Tokenization</h3>
-                    <p data-lang="zh">中文智能分词，精准选择需要的词汇</p>
-                    <p data-lang="en">Chinese word segmentation for precise text selection</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔄</div>
-                    <h3 data-lang="zh">拖放支持</h3>
-                    <h3 data-lang="en">Drag & Drop</h3>
-                    <p data-lang="zh">无缝拖放，与 Finder 和其他应用完美协作</p>
-                    <p data-lang="en">Seamless drag & drop with Finder and other apps</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔒</div>
-                    <h3 data-lang="zh">隐私优先</h3>
-                    <h3 data-lang="en">Privacy First</h3>
-                    <p data-lang="zh">纯本地存储，零外部依赖，不上传任何数据</p>
-                    <p data-lang="en">Pure local storage, zero external dependencies, no data upload</p>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge" data-i18n="hero.badge">现已上架 Mac App Store</div>
+            <h1 class="hero-title">
+                <span class="gradient" data-i18n="hero.title">智能暂存架</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">让剪贴板管理更高效</p>
+            <p class="hero-description" data-i18n="hero.description">
+                ClipShelf 是一款 macOS 剪贴板管理工具。支持文本、图片、文件，还有屏幕文字识别功能，让复制粘贴更方便。
+            </p>
+            <div class="hero-actions">
+                <a href="https://apps.apple.com/cn/app/clipshelf-%E6%99%BA%E8%83%BD%E6%9A%82%E5%AD%98%E6%9E%B6%E4%B8%8E%E5%B1%8F%E5%B9%95%E6%96%87%E5%AD%97%E8%AF%86%E5%88%AB/id6760993477?mt=12" class="btn btn-primary" data-i18n="hero.download">
+                    App Store 下载
+                </a>
+                <a href="#features" class="btn btn-secondary" data-i18n="hero.learnMore">了解更多</a>
+            </div>
+            <div class="hero-screenshot">
+                <div class="screenshot-frame">
+                    <img src="screenshot/中文/01.png" alt="ClipShelf Screenshot" class="hero-img" data-zh="screenshot/中文/01.png" data-en="screenshot/English/1.png">
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="info-section">
-            <h3 data-lang="zh">系统要求</h3>
-            <h3 data-lang="en">System Requirements</h3>
-            <ul>
-                <li data-lang="zh">macOS 14.0 或更高版本</li>
-                <li data-lang="en">macOS 14.0 or later</li>
-                <li data-lang="zh">Apple Silicon 或 Intel 处理器</li>
-                <li data-lang="en">Apple Silicon or Intel processor</li>
-                <li data-lang="zh">需要辅助功能权限用于快速粘贴功能</li>
-                <li data-lang="en">Accessibility permission required for quick paste feature</li>
-            </ul>
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-tag" data-i18n="features.tag">功能特性</span>
+            <h2 class="section-title" data-i18n="features.title">简洁实用</h2>
+            <p class="section-subtitle" data-i18n="features.subtitle">专注剪贴板管理，无多余功能</p>
         </div>
-
-        <div class="info-section">
-            <h3 data-lang="zh">免费试用</h3>
-            <h3 data-lang="en">Free Trial</h3>
-            <p data-lang="zh">ClipShelf Pro 提供 7 天免费试用，解锁无限条目、文件支持、自定义快捷键等高级功能。</p>
-            <p data-lang="en">ClipShelf Pro offers a 7-day free trial with unlimited items, file support, custom shortcuts and more.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3 class="feature-title" data-i18n="feature1.title">智能暂存</h3>
+                <p class="feature-desc" data-i18n="feature1.desc">自动保存复制的内容，支持文本、图片、文件，随时查看历史记录。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👁️</div>
+                <h3 class="feature-title" data-i18n="feature2.title">屏幕文字识别</h3>
+                <p class="feature-desc" data-i18n="feature2.desc">截图识别屏幕上的文字，支持多语言，快捷键触发。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title" data-i18n="feature3.title">快捷操作</h3>
+                <p class="feature-desc" data-i18n="feature3.desc">快捷键呼出面板，拖拽导出、双击粘贴，操作简单。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title" data-i18n="feature4.title">快速搜索</h3>
+                <p class="feature-desc" data-i18n="feature4.desc">搜索历史记录，快速找到想要的内容。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title" data-i18n="feature5.title">精美界面</h3>
+                <p class="feature-desc" data-i18n="feature5.desc">原生 macOS 风格，支持浅色/深色模式。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title" data-i18n="feature6.title">隐私安全</h3>
+                <p class="feature-desc" data-i18n="feature6.desc">数据本地存储，无需联网，隐私安全。</p>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="footer">
-        <p>
-            <a href="index.html" data-lang="zh">首页</a>
-            <a href="index.html" data-lang="en">Home</a>
-            <a href="changelog.html" data-lang="zh">更新日志</a>
-            <a href="changelog.html" data-lang="en">Changelog</a>
-            <a href="privacy.html" data-lang="zh">隐私政策</a>
-            <a href="privacy.html" data-lang="en">Privacy Policy</a>
-            <a href="terms.html" data-lang="zh">使用条款</a>
-            <a href="terms.html" data-lang="en">Terms of Use</a>
-            <a href="https://github.com/crossoverJie/ClipShelf/issues" data-lang="zh">支持</a>
-            <a href="https://github.com/crossoverJie/ClipShelf/issues" data-lang="en">Support</a>
-        </p>
-        <p style="margin-top: 20px;">© 2026 crossoverJie. All rights reserved.</p>
-    </div>
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <span class="section-tag" data-i18n="screenshots.tag">应用截图</span>
+            <h2 class="section-title" data-i18n="screenshots.title">直观易用</h2>
+            <p class="section-subtitle" data-i18n="screenshots.subtitle">看看它是如何工作的</p>
+        </div>
+        <div class="screenshots-grid">
+            <div class="screenshot-item">
+                <div class="screenshot-text">
+                    <div class="screenshot-number">1</div>
+                    <h3 class="screenshot-title" data-i18n="ss1.title">简洁优雅的主界面</h3>
+                    <p class="screenshot-desc" data-i18n="ss1.desc">时间线布局，一目了然查看剪贴板历史。支持按类型筛选。</p>
+                </div>
+                <div class="screenshot-image">
+                    <img src="screenshot/中文/01.png" alt="Screenshot 1" class="ss-img" data-zh="screenshot/中文/01.png" data-en="screenshot/English/1.png">
+                </div>
+            </div>
+            <div class="screenshot-item reverse">
+                <div class="screenshot-text">
+                    <div class="screenshot-number">2</div>
+                    <h3 class="screenshot-title" data-i18n="ss2.title">代码与数学运算</h3>
+                    <p class="screenshot-desc" data-i18n="ss2.desc">内置高速 JS 引擎与表达式计算，一键执行并复制结果。</p>
+                </div>
+                <div class="screenshot-image">
+                    <img src="screenshot/中文/02_resized.png" alt="Screenshot 2" class="ss-img" data-zh="screenshot/中文/02_resized.png" data-en="screenshot/English/2.png">
+                </div>
+            </div>
+            <div class="screenshot-item">
+                <div class="screenshot-text">
+                    <div class="screenshot-number">3</div>
+                    <h3 class="screenshot-title" data-i18n="ss3.title">屏幕文字识别</h3>
+                    <p class="screenshot-desc" data-i18n="ss3.desc">快捷键触发 OCR，提取屏幕文字，支持多语言。</p>
+                </div>
+                <div class="screenshot-image">
+                    <img src="screenshot/中文/03_resized.png" alt="Screenshot 3" class="ss-img" data-zh="screenshot/中文/03_resized.png" data-en="screenshot/English/3.png">
+                </div>
+            </div>
+            <div class="screenshot-item reverse">
+                <div class="screenshot-text">
+                    <div class="screenshot-number">4</div>
+                    <h3 class="screenshot-title" data-i18n="ss4.title">跨设备 WLAN 共享</h3>
+                    <p class="screenshot-desc" data-i18n="ss4.desc">支持跨平台共享内容。</p>
+                </div>
+                <div class="screenshot-image">
+                    <img src="screenshot/中文/04_resized.png" alt="Screenshot 4" class="ss-img" data-zh="screenshot/中文/04_resized.png" data-en="screenshot/English/4.png">
+                </div>
+            </div>
+            <div class="screenshot-item">
+                <div class="screenshot-text">
+                    <div class="screenshot-number">5</div>
+                    <h3 class="screenshot-title" data-i18n="ss5.title">智能导出</h3>
+                    <p class="screenshot-desc" data-i18n="ss5.desc">自动合并和整理内容。</p>
+                </div>
+                <div class="screenshot-image">
+                    <img src="screenshot/中文/05_resized.png" alt="Screenshot 5" class="ss-img" data-zh="screenshot/中文/05_resized.png" data-en="screenshot/English/5.png">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="download-card">
+            <div class="download-content">
+                <div class="download-icon"><img src="image/logo.png" alt="ClipShelf"></div>
+                <h2 class="download-title" data-i18n="download.title">立即开始使用</h2>
+                <p class="download-subtitle" data-i18n="download.subtitle">下载 ClipShelf，管理剪贴板更方便</p>
+                <a href="https://apps.apple.com/cn/app/clipshelf-%E6%99%BA%E8%83%BD%E6%9A%82%E5%AD%98%E6%9E%B6%E4%B8%8E%E5%B1%8F%E5%B9%95%E6%96%87%E5%AD%97%E8%AF%86%E5%88%AB/id6760993477?mt=12" class="app-store-btn">
+                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" id="appStoreBadge">
+                </a>
+                <p class="download-meta" data-i18n="download.meta">适用于 macOS 14.0 或更高版本</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-icon" style="width: 32px; height: 32px;"><img src="image/logo.png" alt="ClipShelf" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <span>ClipShelf</span>
+            </div>
+            <div class="footer-links">
+                <a href="changelog.html" data-i18n="footer.changelog">更新日志</a>
+                <a href="terms.html" data-i18n="footer.terms">使用条款</a>
+                <a href="privacy.html" data-i18n="footer.privacy">隐私政策</a>
+            </div>
+            <span class="footer-copy">© 2025 ClipShelf. All rights reserved.</span>
+        </div>
+    </footer>
 
     <script>
-        function setLanguage(lang) {
-            // Update buttons
-            document.querySelectorAll('.lang-switch button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+        const i18n = {
+            zh: {
+                'nav.features': '功能特性',
+                'nav.screenshots': '应用截图',
+                'nav.download': '下载',
+                'hero.badge': '现已上架 Mac App Store',
+                'hero.title': '智能暂存架',
+                'hero.subtitle': '让剪贴板管理更高效',
+                'hero.description': 'ClipShelf 是一款 macOS 剪贴板管理工具。支持文本、图片、文件，还有屏幕文字识别功能，让复制粘贴更方便。',
+                'hero.download': 'App Store 下载',
+                'hero.learnMore': '了解更多',
+                'features.tag': '功能特性',
+                'features.title': '简洁实用',
+                'features.subtitle': '专注剪贴板管理，无多余功能',
+                'feature1.title': '智能暂存',
+                'feature1.desc': '自动保存复制的内容，支持文本、图片、文件，随时查看历史记录。',
+                'feature2.title': '屏幕文字识别',
+                'feature2.desc': '截图识别屏幕上的文字，支持多语言，快捷键触发。',
+                'feature3.title': '快捷操作',
+                'feature3.desc': '快捷键呼出面板，拖拽导出、双击粘贴，操作简单。',
+                'feature4.title': '快速搜索',
+                'feature4.desc': '搜索历史记录，快速找到想要的内容。',
+                'feature5.title': '精美界面',
+                'feature5.desc': '原生 macOS 风格，支持浅色/深色模式。',
+                'feature6.title': '隐私安全',
+                'feature6.desc': '数据本地存储，无需联网，隐私安全。',
+                'screenshots.tag': '应用截图',
+                'screenshots.title': '直观易用',
+                'screenshots.subtitle': '看看它是如何工作的',
+                'ss1.title': '简洁优雅的主界面',
+                'ss1.desc': '时间线布局，一目了然查看剪贴板历史。支持按类型筛选。',
+                'ss2.title': '代码与数学运算',
+                'ss2.desc': '内置高速 JS 引擎与表达式计算，一键执行并复制结果。',
+                'ss3.title': '屏幕文字识别',
+                'ss3.desc': '快捷键触发 OCR，提取屏幕文字，支持多语言。',
+                'ss4.title': '跨设备 WLAN 共享',
+                'ss4.desc': '支持跨平台共享内容。',
+                'ss5.title': '智能导出',
+                'ss5.desc': '自动合并和整理内容。',
+                'download.title': '立即开始使用',
+                'download.subtitle': '下载 ClipShelf，管理剪贴板更方便',
+                'download.meta': '适用于 macOS 14.0 或更高版本',
+                'footer.changelog': '更新日志',
+                'footer.terms': '使用条款',
+                'footer.privacy': '隐私政策'
+            },
+            en: {
+                'nav.features': 'Features',
+                'nav.screenshots': 'Screenshots',
+                'nav.download': 'Download',
+                'hero.badge': 'Available on Mac App Store',
+                'hero.title': 'Smart Clipboard Manager',
+                'hero.subtitle': 'A better way to manage your clipboard',
+                'hero.description': 'ClipShelf is a clipboard manager for macOS. Supports text, images, files, and screen text recognition to make copy-paste easier.',
+                'hero.download': 'Download on App Store',
+                'hero.learnMore': 'Learn More',
+                'features.tag': 'Features',
+                'features.title': 'Simple & Practical',
+                'features.subtitle': 'Focused on clipboard management, no bloat',
+                'feature1.title': 'Smart Storage',
+                'feature1.desc': 'Auto-save copied content. Supports text, images, and files.',
+                'feature2.title': 'Screen OCR',
+                'feature2.desc': 'Screenshot OCR to extract text. Multi-language support.',
+                'feature3.title': 'Quick Actions',
+                'feature3.desc': 'Hotkey to open, drag to export, double-click to paste.',
+                'feature4.title': 'Instant Search',
+                'feature4.desc': 'Search history to quickly find what you need.',
+                'feature5.title': 'Beautiful UI',
+                'feature5.desc': 'Native macOS style with light/dark mode.',
+                'feature6.title': 'Privacy First',
+                'feature6.desc': 'Local storage, no network needed, private and secure.',
+                'screenshots.tag': 'Screenshots',
+                'screenshots.title': 'Intuitive & Easy',
+                'screenshots.subtitle': 'See how it works',
+                'ss1.title': 'Clean & Elegant Interface',
+                'ss1.desc': 'Timeline view to see clipboard history. Filter by type.',
+                'ss2.title': 'Code & Math',
+                'ss2.desc': 'Built-in high-speed JS engine and expression calculator. Execute and copy results instantly.',
+                'ss3.title': 'Screen Text Recognition',
+                'ss3.desc': 'Hotkey-triggered OCR to extract text from screen. Multi-language support.',
+                'ss4.title': 'Cross-Device Sharing',
+                'ss4.desc': 'Share content across platforms via WLAN.',
+                'ss5.title': 'Smart Export',
+                'ss5.desc': 'Auto-merge and organize content.',
+                'download.title': 'Get Started Today',
+                'download.subtitle': 'Download ClipShelf to manage your clipboard easier',
+                'download.meta': 'Requires macOS 14.0 or later',
+                'footer.changelog': 'Changelog',
+                'footer.terms': 'Terms',
+                'footer.privacy': 'Privacy'
+            }
+        };
 
-            // Update content
-            document.querySelectorAll('[data-lang]').forEach(el => {
-                el.classList.remove('active');
-                if (el.getAttribute('data-lang') === lang) {
-                    el.classList.add('active');
+        const langButtons = document.querySelectorAll('.lang-btn');
+        let currentLang = 'zh';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+
+            langButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (i18n[lang][key]) {
+                    el.textContent = i18n[lang][key];
                 }
             });
 
-            // Update html lang attribute
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.src = el.dataset[lang];
+            });
+
             document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
         }
 
-        // Initialize: show Chinese by default
-        document.querySelectorAll('[data-lang="zh"]').forEach(el => {
-            el.classList.add('active');
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+        });
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
     </script>
 </body>
